@@ -16,7 +16,7 @@ function App() {
       console.log(authRes)
     })
     .catch(err => {
-      alert('There was a problem authenticating you')
+      alert('There was a problem authenticating you: ' + process.env.NODE_ENV)
     })
   }, []);
 
