@@ -16,6 +16,7 @@ export const ChatBox = (props: IChatBoxProps) => {
     >
       <ChatInput
         value={inputText}
+        placeholder='Type your message here...'
         onChange={(gottenText: IFormControlValue) =>
           handleChatInput({ inputText: gottenText.target.value, setInputText })
         }
