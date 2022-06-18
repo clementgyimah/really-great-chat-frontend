@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { Button, Col } from "react-bootstrap";
 import { Header, SideBar, ChatBox } from "../components";
 import {
-  TestText,
   Colors,
   TestOnlineUsers,
   TestRoom,
