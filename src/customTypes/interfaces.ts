@@ -4,6 +4,14 @@ import {
   TChatBoxHeight,
   TInputText,
   TSetInputText,
+  TUserID,
+  TUserEmail,
+  TUserName,
+  TUserDataState,
+  TMessageID,
+  TTime,
+  TDate,
+  TContent,
 } from "./types";
 
 export interface IHeaderProps {
@@ -13,6 +21,7 @@ export interface IHeaderProps {
 export interface ISideBarProps {
   headerHeight: THeaderHeight;
   sideBarWidth: TSideBarWidth;
+  onlineUsers: TUserDataState;
 }
 
 export interface IChatBoxProps {
@@ -32,5 +41,26 @@ export interface IFormControlValue {
 }
 
 export interface ISubmitChat {
-    inputText: TInputText;
+  inputText: TInputText;
+}
+
+export interface IUserData {
+  id: TUserID;
+  email: TUserEmail;
+  name: TUserName;
+}
+
+export interface IChatMessage {
+  id: TMessageID;
+  sender: TUserID;
+  receiver: TUserID;
+  time: TTime;
+  date: TDate;
+  content: TContent;
+}
+
+export interface IChatRoom {
+  creator: TUserID;
+  member: TUserID;
+  messages: IChatMessage[];
 }
