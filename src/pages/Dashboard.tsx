@@ -1,22 +1,26 @@
 import * as React from "react";
 import "../assets/css/Dashboard.css";
 import styled from "styled-components";
-import { Button, Col } from "react-bootstrap";
-import { Header, SideBar, ChatBox } from "../components";
+import { Col, Row } from "react-bootstrap";
+import { Header, SideBar, ChatBox, Login } from "../components";
 import {
   Colors,
   TestOnlineUsers,
   TestRoom,
   TestCurrentUser,
+  API_URL,
 } from "../common";
 import {
   TUserDataState,
   IChatRoom,
   IChatMessage,
   IUserData,
+  ServerToClientEvents,
+  ClientToServerEvents,
 } from "../customTypes";
-// import axios from "axios";
-// import { API_URL } from "../common";
+import { Signup } from "../components/Signup";
+import { io, Socket } from "socket.io-client";
+import { sendUserOnline } from "../functions";
 
 function App() {
   const [userAuthenticated, setUserAuthenticated] = React.useState(false);
@@ -25,21 +29,21 @@ function App() {
   );
   const [onlineUsers, setOnlineUsers] = React.useState<TUserDataState>([]);
   const [room, setRoom] = React.useState<IChatRoom>({} as IChatRoom);
+  const socket: Socket<ServerToClientEvents, ClientToServerEvents> =
+    io(API_URL);
 
   React.useEffect(() => {
-    setUserAuthenticated(true);
+    // setUserAuthenticated(true);
+    if (userAuthenticated) {
+      socket.on("usersonline", (onlinUsers) => {
+        console.log("The users: ", onlinUsers);
+      });
+      sendUserOnline(currentUser);
+    }
     setCurrentUser(TestCurrentUser);
     setOnlineUsers(TestOnlineUsers);
-    setRoom(TestRoom);
-    /*
-    axios.get(`${API_URL}/api/users/all`).then(authRes => {
-      console.log(authRes)
-    })
-    .catch(err => {
-      alert('There was a problem authenticating you: ' + process.env.NODE_ENV)
-    })
-    */
-  }, []);
+    // setRoom(TestRoom);
+  }, [currentUser, socket, userAuthenticated]);
 
   return userAuthenticated ? (
     <MainContainerCol>
@@ -51,29 +55,42 @@ function App() {
         sideBarWidth={sideBarWidth}
       />
       <BodyCol>
-        <MessageDateCol>18/06/2022</MessageDateCol>
-        {room.messages.map((eachMessage: IChatMessage) =>
-          currentUser.id === eachMessage.sender ? (
-            <SenderMessageCol key={eachMessage.id}>
-              <SenderMessageSpan>
-                {eachMessage.content}{" "}
-                <MessageTimeSpan>{eachMessage.time}</MessageTimeSpan>
-              </SenderMessageSpan>
-            </SenderMessageCol>
-          ) : (
-            <ReceiverMessageCol key={eachMessage.id}>
-              <ReceiverMessageSpan>
-                {eachMessage.content}{" "}
-                <MessageTimeSpan>{eachMessage.time}</MessageTimeSpan>
-              </ReceiverMessageSpan>
-            </ReceiverMessageCol>
+        {room.messages && <MessageDateCol>18/06/2022</MessageDateCol>}
+        {room.messages ? (
+          room.messages.map((eachMessage: IChatMessage) =>
+            currentUser.id === eachMessage.sender ? (
+              <SenderMessageCol key={eachMessage.id}>
+                <SenderMessageSpan>
+                  {eachMessage.content}{" "}
+                  <MessageTimeSpan>{eachMessage.time}</MessageTimeSpan>
+                </SenderMessageSpan>
+              </SenderMessageCol>
+            ) : (
+              <ReceiverMessageCol key={eachMessage.id}>
+                <ReceiverMessageSpan>
+                  {eachMessage.content}{" "}
+                  <MessageTimeSpan>{eachMessage.time}</MessageTimeSpan>
+                </ReceiverMessageSpan>
+              </ReceiverMessageCol>
+            )
           )
+        ) : (
+          <StyledSelectUser>
+            Select a user from the sidebar to start chatting
+          </StyledSelectUser>
         )}
       </BodyCol>
     </MainContainerCol>
   ) : (
     <AuthContainerCol>
-      <AuthButton>Authenticate</AuthButton>
+      <Login
+        setCurrentUser={setCurrentUser}
+        setUserAuthenticated={setUserAuthenticated}
+      />
+      <Signup
+        setCurrentUser={setCurrentUser}
+        setUserAuthenticated={setUserAuthenticated}
+      />
     </AuthContainerCol>
   );
 }
@@ -82,27 +99,17 @@ const headerHeight = 80;
 const sideBarWidth = 300;
 const bodyEdgeSpace = 30;
 const chatBoxHeight = 80;
-const authButtonWidth = 150;
-const authButtonHeight = 100;
 
 const MainContainerCol = styled(Col)`
   width: 100%;
   height: 100%;
 `;
 
-const AuthContainerCol = styled(Col)`
+const AuthContainerCol = styled(Row)`
   display: flex;
   width: 100%;
   justify-content: center;
   align-items: center;
-`;
-
-const AuthButton = styled(Button)`
-  height: ${authButtonHeight}px;
-  width: ${authButtonWidth}px;
-  margin-left: 15px;
-  background-color: ${Colors.colorComb1.ebony};
-  border: 0px solid ${Colors.colorComb1.ebony};
 `;
 
 const BodyCol = styled(Col)`
@@ -146,6 +153,12 @@ const ReceiverMessageSpan = styled.span`
 const MessageTimeSpan = styled.span`
   font-size: 12px;
   margin-left: 5px;
+`;
+
+const StyledSelectUser = styled(Col)`
+  text-align: center;
+  font-size: 20px;
+  color: ${Colors.colorComb1.antiqueBrass};
 `;
 
 export default App;

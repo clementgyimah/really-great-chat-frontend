@@ -12,6 +12,9 @@ import {
   TTime,
   TDate,
   TContent,
+  TSetUserAuthenticated,
+  TSetCurrentUser,
+  TUserPassword,
 } from "./types";
 
 export interface IHeaderProps {
@@ -63,4 +66,45 @@ export interface IChatRoom {
   creator: TUserID;
   member: TUserID;
   messages: IChatMessage[];
+}
+
+export interface ILoginButtonProps {
+  setCurrentUser: TSetCurrentUser;
+  setUserAuthenticated: TSetUserAuthenticated;
+}
+
+export interface ILoginFuncProps {
+  email: TUserEmail;
+  password: TUserPassword;
+  setCurrentUser: TSetCurrentUser;
+  setUserAuthenticated: TSetUserAuthenticated;
+}
+
+export interface ISignupFuncProps {
+  name: TUserName;
+  email: TUserEmail;
+  password: TUserPassword;
+  setCurrentUser: TSetCurrentUser;
+  setUserAuthenticated: TSetUserAuthenticated;
+}
+
+export interface ServerToClientEvents {
+  noArg: () => void;
+  basicEmit: (a: number, b: string, c: Buffer) => void;
+  withAck: (d: string, callback: (e: number) => void) => void;
+  usersonline: (onlinUsers: Object) => void;
+}
+
+export interface ClientToServerEvents {
+  connect: () => void;
+  iamonline: () => void;
+}
+
+export interface InterServerEvents {
+  ping: () => void;
+}
+
+export interface SocketData {
+  name: string;
+  age: number;
 }
