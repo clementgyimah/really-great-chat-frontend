@@ -7,7 +7,7 @@ export const Header = (props: IHeaderProps) => {
     const {headerHeight, currentUser} = props;
     return(
         <HeaderMainRow headerheight={headerHeight}>
-            <HeaderBrandCol>Really Great Chat ({currentUser.name})</HeaderBrandCol>
+            <HeaderBrandCol>Really Great Chat ({/*currentUser.name*/})</HeaderBrandCol>
         </HeaderMainRow>
     )
 }
