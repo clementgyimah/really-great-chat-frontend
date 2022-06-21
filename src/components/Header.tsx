@@ -4,10 +4,10 @@ import { Col, Row } from "react-bootstrap"
 import { Colors } from "../common";
 
 export const Header = (props: IHeaderProps) => {
-    const {headerHeight} = props;
+    const {headerHeight, currentUser} = props;
     return(
         <HeaderMainRow headerheight={headerHeight}>
-            <HeaderBrandCol>Really Great Chat</HeaderBrandCol>
+            <HeaderBrandCol>Really Great Chat ({currentUser.name})</HeaderBrandCol>
         </HeaderMainRow>
     )
 }

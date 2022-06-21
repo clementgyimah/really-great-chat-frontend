@@ -19,6 +19,7 @@ import {
 
 export interface IHeaderProps {
   headerHeight: THeaderHeight;
+  currentUser: IUserData;
 }
 
 export interface ISideBarProps {

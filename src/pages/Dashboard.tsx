@@ -47,7 +47,7 @@ function App() {
 
   return userAuthenticated ? (
     <MainContainerCol>
-      <Header headerHeight={headerHeight} />
+      <Header headerHeight={headerHeight} currentUser={currentUser} />
       <ChatBox sideBarWidth={sideBarWidth} chatBoxHeight={chatBoxHeight} />
       <SideBar
         onlineUsers={onlineUsers}
